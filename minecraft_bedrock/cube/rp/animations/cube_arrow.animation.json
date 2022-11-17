@@ -1,0 +1,15 @@
+{
+	"format_version": "1.8.0",
+	"animations": {
+		"animation.cube_arrow.move": {
+			"loop": true,
+			"animation_length": 0.05,
+			"bones": {
+				"root": {
+					"rotation": ["-q.body_x_rotation", "-q.body_y_rotation", 0],
+					"scale" : [ 0.7, 0.7, 0.9 ]
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,43 @@
+{
+    "format_version": "1.8.0",
+    "render_controllers": {
+        "controller.render.cube": {
+            "arrays": {
+                "geometries": {
+                    "array.cube_states": [
+                        "geometry.cube",
+                        "geometry.cube_hurt"
+                    ]
+                },
+                "textures": {
+                    "array.full_textures": [
+                        "texture.cube_1",
+                        "texture.cube_2",
+                        "texture.cube_3"
+                    ],
+                    "array.hurt_textures": [
+                        "texture.cube_hurt_1",
+                        "texture.cube_hurt_2",
+                        "texture.cube_hurt_3"
+                    ]
+                }
+            },
+            "geometry": "array.cube_states[v.has_low_health]",
+            "textures": [
+                "v.has_low_health ? array.hurt_textures[q.variant] : array.full_textures[q.variant]"
+            ],
+            "materials": [
+                {
+                    "*": "material.default"
+                }
+            ],
+            "is_hurt_color": {},
+            "overlay_color": {
+                "r": 1.0,
+                "g": 1.0,
+                "b": 0.0,
+                "a": "v.flash_alpha"
+            }
+        }
+    }
+}

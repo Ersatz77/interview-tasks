@@ -1,0 +1,25 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.player.attacked_cube": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "attacked": "q.is_sheared" }
+                    ]
+                },
+                "attacked": {
+                    "on_entry": [
+                        // 'q.is_item_name_any' could have also been used in the default state's transition
+                        "/damage @s[hasitem=[{item=minecraft:bow,location=slot.weapon.mainhand,quantity=0}]] 2 thorns",
+                        "@s task:reset_attack_cube"
+                    ],
+                    "transitions": [
+                        { "default": "1.0" }
+                    ]
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,191 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        // q.is_stunned: Trigger dialogue
+        // q.is_powered: Activation state
+        // q.is_sheared: Was hurt by player arrow
+        // q.is_ignited: Is dying
+        
+        "controller.animation.cube.open_dialogue": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "open": "q.is_stunned" }
+                    ]
+                },
+                "open": {
+                    "on_entry": [
+                        "/dialogue open @s @p[m=!creative] activate_cube", // Shorthands like 'c' is preferred for gamemode
+                        "@s task:reset_start_dialogue"
+                    ],
+                    "transitions": [
+                        { "default": "1.0" } // Use '1'
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.update_collision": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "full": "q.is_powered && q.health / q.max_health >= 0.3" },
+                        { "hurt": "q.is_powered && q.health / q.max_health < 0.3" }
+                    ]
+                },
+                "full": {
+                    "on_entry": [
+                        "@s task:set_full_collision"
+                    ],
+                    "transitions": [
+                        { "hurt": "q.health / q.max_health < 0.3" }
+                    ]
+                },
+                "hurt": {
+                    "on_entry": [
+                        "@s task:set_hurt_collision"
+                    ],
+                    "transitions": [
+                        { "full": "q.health / q.max_health >= 0.3" }
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.path_to_armor_stand": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "on_entry": [
+                        "/tag @s remove is_prioritizing_armor_stand"
+                    ],
+                    "transitions": [
+                        { "prioritize_armor_stand": "q.is_powered && q.health / q.max_health < 0.5" }
+                    ]
+                },
+                "prioritize_armor_stand": {
+                    "on_entry": [
+                        "/tag @s add is_prioritizing_armor_stand"
+                    ],
+                    "transitions": [
+                        { "default": "q.health / q.max_health >= 0.5" }
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.melee_attack": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "attack": "q.is_powered && v.attack_time > 0" }
+                    ],
+                    "on_exit": [
+                        "/damage @p[r=2] 2 contact entity @s"
+                    ]
+                },
+                "attack": {
+                    "transitions": [
+                        { "default": "v.attack_time == 0" }
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.ranged_attack": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "attack": "q.is_powered && q.facing_target_to_range_attack && q.ground_speed == 0 && q.vertical_speed == 0" }
+                    ]
+                },
+                "attack": {
+                    "on_entry": [
+                        "v.knockback_delay_ts = q.life_time + 2;",
+                        "@s task:on_ranged_attack_shoot"
+                    ],
+                    "transitions": [
+                        { "default": "q.life_time >= v.knockback_delay_ts" }
+                    ],
+                    "on_exit": [
+                        "@s task:reset_ranged_attack_shoot"
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.knockback_attack": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "delay": "q.is_powered && q.is_roaring" }
+                    ]
+                },
+                "delay": {
+                    "on_entry": [
+                        "v.knockback_delay_ts = q.life_time + 0.45;"
+                    ],
+                    "transitions": [
+                        { "attack": "q.life_time >= v.knockback_delay_ts" }
+                    ]
+                },
+                "attack": {
+                    "on_entry": [
+                        "/damage @a[r=4] 6 block_explosion entity @s"
+                    ],
+                    "transitions": [
+                        { "default": "!q.is_roaring" }
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.cycle_textures": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "on_entry": [
+                        "v.next_texture = math.mod(q.variant + 1, 3);"
+                    ],
+                    "transitions": [
+                        { "texture_1": "q.is_powered && q.is_sheared && v.next_texture == 0" },
+                        { "texture_2": "q.is_powered && q.is_sheared && v.next_texture == 1" },
+                        { "texture_3": "q.is_powered && q.is_sheared && v.next_texture == 2" }
+                    ],
+                    "on_exit": [
+                        "@s task:reset_hurt_by_player_arrow"
+                    ]
+                },
+                "texture_1": {
+                    "on_entry": [
+                        "@s task:set_texture_1"
+                    ],
+                    "transitions": [
+                        { "default": "1.0" }
+                    ]
+                },
+                "texture_2": {
+                    "on_entry": [
+                        "@s task:set_texture_2"
+                    ],
+                    "transitions": [
+                        { "default": "1.0" }
+                    ]
+                },
+                "texture_3": {
+                    "on_entry": [
+                        "@s task:set_texture_3"
+                    ],
+                    "transitions": [
+                        { "default": "1.0" }
+                    ]
+                }
+            }
+        }
+    }
+}

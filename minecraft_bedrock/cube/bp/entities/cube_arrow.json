@@ -1,0 +1,66 @@
+{
+    "format_version": "1.18.0",
+    "minecraft:entity": {
+        "description": {
+            "identifier": "task:cube_arrow",
+            "runtime_identifier": "minecraft:snowball",
+            "is_summonable": true,
+            "is_spawnable": false,
+            "is_experimental": false
+        },
+        "component_groups": {
+            "task:despawn_timer": {
+                "minecraft:timer": {
+                    "time": 2,
+                    "looping": false,
+                    "time_down_event": {
+                        "event": "task:despawn",
+                        "target": "self"
+                    }
+                }
+            },
+            "task:despawn": {
+                "minecraft:instant_despawn": {}
+            }
+        },
+        "components": {
+            "minecraft:type_family": {
+                "family": [
+                    "cube_arrow", "projectile"
+                ]
+            },
+            "minecraft:projectile": {
+                "power": 2,
+                "gravity": 0,
+                "knockback": false,
+                "on_hit": {
+                    "impact_damage": {
+                        "damage": 3,
+                        "knockback": true
+                    },
+                    "remove_on_hit": {}
+                }
+            },
+            "minecraft:physics": {
+                "has_collision": false,
+                "has_gravity": false
+            }
+        },
+        "events": {
+            "minecraft:entity_spawned": {
+                "add": {
+                    "component_groups": [
+                        "task:despawn_timer"
+                    ]
+                }
+            },
+            "task:despawn": {
+                "add": {
+                    "component_groups": [
+                        "task:despawn"
+                    ]
+                }
+            }
+        }
+    }
+}

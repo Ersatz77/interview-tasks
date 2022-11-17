@@ -1,0 +1,10 @@
+pack.name=Task RP
+pack.description=Task RP
+
+entity.task:cube.name=Cube
+entity.task:cube_arrow.name=Cube Arrow
+
+dialogue.cube.text.activate=Would you like to start this Cube?
+dialogue.cube.button.start=Start
+
+action.interact.cube.open_dialogue=Open dialogue

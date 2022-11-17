@@ -1,0 +1,62 @@
+{
+    "format_version": "1.10.0",
+    "minecraft:client_entity": {
+        "description": {
+            "identifier": "task:cube",
+            "geometry": {
+                "cube": "geometry.cube",
+                "cube_hurt": "geometry.cube_hurt"
+            },
+            "textures": {
+                "cube_1": "textures/entity/cube_1",
+                "cube_2": "textures/entity/cube_2",
+                "cube_3": "textures/entity/cube_3",
+
+                "cube_hurt_1": "textures/entity/cube_hurt_1",
+                "cube_hurt_2": "textures/entity/cube_hurt_2",
+                "cube_hurt_3": "textures/entity/cube_hurt_3"
+            },
+            "materials": {
+                "default": "entity"
+            },
+            "animations": {
+                "walk": "animation.cube.walk",
+                "knockback_swell": "animation.cube.knockback",
+                "death": "animation.cube.death",
+
+                "move_controller": "controller.animation.cube.move",
+                //"hurt_flash_controller": "controller.animation.cube.hurt_by_player_flash",
+                "death_controller": "controller.animation.cube.death"
+            },
+            "particle_effects": {
+                "knockback": "task:knockback"
+            },
+            "scripts": {
+                "initialize": [
+                    "v.end_flash_ts = 0;"
+                ],
+                "pre_animation": [
+                    // Use the queries directly
+                    "v.is_activated = q.is_powered;",
+                    "v.was_hurt_by_player_arrow = q.is_sheared;",
+                    "v.is_dying = q.is_ignited;",
+                    
+                    "v.end_flash_ts = v.was_hurt_by_player_arrow ? q.life_time + 1.33 : v.end_flash_ts;",
+                    "v.flash_time = math.max(v.end_flash_ts - q.life_time, 0);",
+                    "v.flash_alpha = math.sin(v.flash_time * 1080 - 90) * 0.25 + 0.25;",
+
+                    "v.normalized_health = q.health / q.max_health;",
+                    "v.has_low_health = v.is_activated && v.normalized_health < 0.3;"
+                ],
+                "animate": [
+                    //"hurt_flash_controller",
+                    "move_controller",
+                    "death_controller"
+                ]
+            },
+            "render_controllers": [
+                "controller.render.cube"
+            ]
+        }
+    }
+}

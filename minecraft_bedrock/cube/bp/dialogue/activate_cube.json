@@ -1,0 +1,23 @@
+{
+    "format_version": "1.18.0",
+    "minecraft:npc_dialogue": {
+        "scenes": [
+            {
+                "scene_tag": "activate_cube",
+                "text": {
+                    "rawtext": [{"translate": "dialogue.cube.text.activate"}]
+                },
+                "buttons": [
+                    {
+                        "name": {
+                            "rawtext": [{"translate": "dialogue.cube.button.start"}]
+                        },
+                        "commands": [
+                            "/event entity @s task:activate"
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}

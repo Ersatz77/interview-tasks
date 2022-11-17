@@ -1,0 +1,66 @@
+{
+    "format_version": "1.10.0",
+    "animation_controllers": {
+        "controller.animation.cube.hurt_by_player_flash": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "flashing": "v.flash_alpha = 0; v.end_flash_ts = q.life_time + 1.33; return v.was_hurt_by_player_arrow;" }
+                    ]
+                },
+                "flashing": {
+                    "transitions": [
+                        { "hurt_while_flashing": "v.was_hurt_by_player_arrow" },
+                        { "default": "v.flash_alpha = math.sin((v.end_flash_ts - q.life_time) * 1080 - 90) * 0.25 + 0.25; return v.end_flash_ts <= q.life_time;" }
+                    ]
+                },
+                "hurt_while_flashing": {
+                    "transitions": [
+                        { "flashing": "v.flash_alpha = 0; v.end_flash_ts = q.life_time + 1.33; return 1.0;" }
+                    ]
+                }
+            }
+        },
+
+        "controller.animation.cube.move": {
+            "initial_state": "move",
+            "states": {
+                "move": {
+                    "animations": [
+                        { "walk": "v.is_activated ? q.modified_move_speed : 0" }
+                    ],
+                    "transitions": [
+                        { "knockback": "q.is_roaring" }
+                    ],
+                    "blend_transition": 0.2
+                },
+                "knockback": {
+                    "animations": [
+                        "knockback_swell"
+                    ],
+                    "transitions": [
+                        { "move": "!q.is_roaring" }
+                    ],
+                    "blend_transition": 0.2
+                }
+            }
+        },
+
+        "controller.animation.cube.death": {
+            "initial_state": "default",
+            "states": {
+                "default": {
+                    "transitions": [
+                        { "dying": "v.is_dying" }
+                    ]
+                },
+                "dying": {
+                    "animations": [
+                        "death"
+                    ]
+                }
+            }
+        }
+    }
+}
